@@ -1,0 +1,41 @@
+#!/bin/python3																				Declaring language
+
+import sys																						Lets us enter command line arguments + other things
+import socket																					Has to do with ports
+from datetime import datetime 															Helps make it look better 
+
+#Define our target 
+if len(sys.argv) ==2:
+		 target = socket.gethostbyname(sys.argv[1]) 								#translate hostname to ipv4
+else:
+		print("-----Invalid Amount of Arguments!-----")
+		print("-----Syntax: python3 scanner.py <ip>-----")							just telling that they are writing it wrong ^
+		sys.exit()																				Must exit or it will get messed up
+
+#Make it look pretty
+print(“-” * 100)																				prints 100 -'s
+print(Scanning Target "+target)															
+print("Time Started: "str(datetime.now())))											says the time it started
+print("-" * 100)
+
+
+try:
+		for port in range (50,85):															telling where to scan
+				s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				socket.setdefaulttimeout(1)												saying when to stop scanning the port
+				result = s.connect_ex((target,port))									defining “result”
+				print("Checking port {}".format(port))									prints EX: “checking port 80”
+				if result == 0:																	if nothing is using that port:
+						print("Port {} is open".format(port))							tell the user
+				s.close()					
+																		
+except KeyboardInterrupt:
+		print("\nExiting Program")
+		sys.exit()
+
+except socket.gaierror:
+		print("Hostname Could not be solved")
+		
+except socket.error:
+		print("Could not connect to server.")
+		sys.exit

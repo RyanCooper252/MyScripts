@@ -1,0 +1,52 @@
+#this script is used to find domains and passwords from a wordlist such as (Tensorflow-1.4-billion-password-analysis)
+#!/bin/bash
+
+if [ “$#” != “2” ]; then																																			looking to see if there are 2 arguments
+		echo "Breach-Parse v2: A Breached Domain Parsing Tool by Ryan Cooper
+		echo “ ”
+		echo "Usage: breach-parse <domain to search> <file to output>
+		echo “ ”
+		echo ‘For multiple domains: breach-parse ”<domain to search>|<domain to search>" <file to output>’
+		echo 'Example breach-parse “@gmail.com|@yahoo.com” multiple.txt
+		exit 1
+		
+else
+		fullfile=$2																																					defining fullfile as the second argument
+		fbname=$(basename “$fullfile” | cut -d. -f1)																									if the file is not a .txt file it will make it one																						
+		master=$fbname-master.txt																															seperates results into master,
+		users=$fbname-users.txt																																usernames,
+		passwords=$fbname-passwords.txt																													and passwords
+		
+		touch $master																																				makes matser file
+		total_files=$(find /opt/breach-pars/BreachCompilation/data -type f | wc -l)															sets a total file count by counting it
+		file_Count=0																																				starts with 0 files
+		
+		function ProgressBar {
+		
+				let _progress=(${file_count}*100/${total_Files}*100)/100																		making a progress bar
+				let _done=($(printf “%${_done}s”)																										what happens when it is done
+				let _left=40-$_done
+				
+		printf “\rProgress : [${fill// /\#}${_empty// /-}] ${progress}%%”																		
+		
+		}
+		
+		find /opt/breach-parse/BreachCompilation/data -type f -print0 | while read -d $'\0' file											find every file in every folder and read through them
+		
+		do
+				grep -a -E “$1” “$file” >> $master																											write results
+				((+file_Count))																																	increse progress bar
+				ProgressBar ${number} ${total_Files}																										more shit for the progress bar
+				
+		done
+fi
+
+sleep 3
+
+awk -F':' ‘{print $1}’ $master > $users																														grabbing users
+
+sleep 1
+
+awk -F':' ‘{print $2}’ $master > $passwords																												grabbing passwords
+echo
+exit 0
